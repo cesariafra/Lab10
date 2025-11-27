@@ -16,5 +16,9 @@ class Controller:
         * Numero di Tratte
         * Lista di Tratte che superano il costo indicato come soglia
         """
-        # TODO
 
+        if self._view.guadagno_medio_minimo is not (int or float):
+            self._view.show_alert("Inserire un valore numerico")
+
+        ...
+        # TODO
