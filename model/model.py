@@ -14,25 +14,20 @@ class Model:
         Costruisce il grafo (self.G) inserendo tutti gli Hub (i nodi) presenti e filtrando le Tratte con
         guadagno medio per spedizione >= threshold (euro)
         """
+        self.G.clear()
+        for el in self.get_all_edges():
+            if el[2] >= threshold:
+                self.G.add_nodes_from([el[0], el[1]])
+                self.G.add_edge(el[0], el[1], weight = el[2])
         self._nodes = self.get_num_nodes()
         self._edges = self.get_num_edges()
-
-        for el in self.get_all_edges():
-            self.G.add_nodes_from([el[0], el[1]])
-            self.G.add_edge(el)
-
-        # TODO
 
     def get_num_edges(self):
         """
         Restituisce il numero di Tratte (edges) del grafo
         :return: numero di edges del grafo
         """
-        numero = 0
-        for el in DAO.get_all_tratte():
-            if el.guadagno_medio >= threshold:
-                numero += 1
-
+        numero = len(list(self.G.edges()))
         return numero
 
     def get_num_nodes(self):
@@ -40,12 +35,8 @@ class Model:
         Restituisce il numero di Hub (nodi) del grafo
         :return: numero di nodi del grafo
         """
-        hubs = set()
-        for el in DAO.get_all_tratte():
-            if el.guadagno_medio >= threshold:
-                for h in el.id_hub_coinvolti:
-                    hubs.add(h)
-        return len(hubs)
+        hubs = len(list(self.G.nodes()))
+        return hubs
 
     def get_all_edges(self):
         """
@@ -54,10 +45,11 @@ class Model:
         """
         edges = []
         for el in DAO.get_all_tratte():
-            if el.guadagno_medio >= threshold:
-                for h in el.id_hub_coinvolti:
-                    edges.append(h)
-                edges.append(el.guadagno_medio)
+            t = []
+            for h in el.id_hub_coinvolti:
+                for n in DAO.get_all_hub():
+                    if n.id == h:
+                        t.append(f"{n.nome} ({n.stato})")
+            t.append(el.guadagno_medio)
+            edges.append(tuple(t))
         return edges
-
-        # TODO

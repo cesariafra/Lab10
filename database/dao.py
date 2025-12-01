@@ -4,7 +4,6 @@ from model.hub import Hub
 from model.spedizione import Spedizione
 from model.tratta import Tratta
 
-
 class DAO:
     """
     Implementare tutte le funzioni necessarie a interrogare il database.
@@ -55,12 +54,12 @@ class DAO:
         cursor.execute(query)
         for row in cursor:
             hb = Hub(row['id'],
-                              row['codice'],
-                              row['nome'],
-                              row['citta'],
-                              row['stato'],
-                              row['latitudine'],
-                              row['longitudine'])
+                     row['codice'],
+                     row['nome'],
+                     row['citta'],
+                     row['stato'],
+                     row['latitudine'],
+                     row['longitudine'])
             result.append(hb)
         cursor.close()
         cnx.close()
@@ -91,10 +90,3 @@ class DAO:
         cursor.close()
         cnx.close()
         return result
-
-
-if __name__ == '__main__':
-    print(DAO.get_all_sped())
-    print(DAO.get_all_comp())
-    print(DAO.get_all_hub())
-    print(DAO.get_all_tratte())
